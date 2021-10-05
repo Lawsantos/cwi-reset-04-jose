@@ -4,34 +4,36 @@ public class Registradora {
     public static void main(String[] args) {
 //        primeiroBug();
 
-        segundoBug();
+//        segundoBug();
 
-//        terceiroBug();
-//
+        terceiroBug();
+
 //        quartoBug();
-//
+
 //        quintoBug();
-//
+
 //        sextoBug();
     }
 
     private static double registrarItem(String item, int quantidade) {
-        double precoItem = RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
-
+        //Reposição padrão por quantidade mínima
         if (QuantidadeMinimaItem.precisaReposicao(item)) {
-            if (Constantes.PAO.equals(item) || Constantes.SANDUICHE_PRONTO.equals(item) || Constantes.TORTA.equals(item)) {
-                if (!DataProjeto.cozinhaEmFuncionamento()) {
-                    System.out.println("Cozinha fechada!");
-                }
-                ReposicaoCozinha.reporItem(item);
-            }
+            ReposicaoItem.reporItem(item);
+        }
 
-            if (Constantes.LEITE.equals(item) || Constantes.CAFE.equals(item)) {
-                ReposicaoFornecedor.reporItem(item);
+        boolean itemDependeDeCozinha = Constantes.PAO.equals(item) || Constantes.SANDUICHE_PRONTO.equals(item) || Constantes.TORTA.equals(item);
+        boolean cozinhaFechada = !DataProjeto.cozinhaEmFuncionamento();
+
+        if (itemDependeDeCozinha && cozinhaFechada) {
+            System.out.println("Cozinha fechada!");
+        } else {
+            //Reposição padrão por falta de estoque para a venda
+            while (ItensPorQuantidade.estoqueInsuficiente(item, quantidade)) {
+                ReposicaoItem.reporItem(item);
             }
         }
 
-        return precoItem;
+        return RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
     }
 
     private static void primeiroBug() {
