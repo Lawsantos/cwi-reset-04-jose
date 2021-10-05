@@ -5,11 +5,11 @@ public class ReposicaoFornecedor {
     static void reporItem(String item) {
         Random random = new Random();
 
-        if ("leite".equals(item)) {
+        if (Constantes.LEITE.equals(item)) {
             ItensPorQuantidade.leite = random.nextInt(40) + 10;
         }
 
-        if ("cafe".equals(item)) {
+        if (Constantes.CAFE.equals(item)) {
             ItensPorQuantidade.cafe = random.nextInt(40) + 10;
         }
     }

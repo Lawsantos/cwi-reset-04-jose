@@ -1,14 +1,14 @@
 public class ReposicaoCozinha {
 
     static void reporItem(String item) {
-        if ("paes".equals(item)) {
-            ItensPorQuantidade.pao = 3600;
+        if (Constantes.PAO.equals(item)) {
+            ItensPorQuantidade.pao = Constantes.QTD_PADRAO_PAO;
         }
-        if ("torta".equals(item)) {
-            ItensPorQuantidade.torta = 4;
+        if (Constantes.TORTA.equals(item)) {
+            ItensPorQuantidade.torta = Constantes.QTD_PADRAO_TORTA;
         }
-        if ("sanduiche".equals(item)) {
-            ItensPorQuantidade.sanduiche = 20;
+        if (Constantes.SANDUICHE_PRONTO.equals(item)) {
+            ItensPorQuantidade.sanduiche = Constantes.QTD_PADRAO_SANDUICHE_PRONTO;
         }
     }
 }
