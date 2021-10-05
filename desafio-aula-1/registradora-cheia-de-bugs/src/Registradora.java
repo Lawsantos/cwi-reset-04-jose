@@ -2,17 +2,17 @@
 public class Registradora {
 
     public static void main(String[] args) {
-        primeiroBug();
+//        primeiroBug();
 
         segundoBug();
 
-        terceiroBug();
-
-        quartoBug();
-
-        quintoBug();
-
-        sextoBug();
+//        terceiroBug();
+//
+//        quartoBug();
+//
+//        quintoBug();
+//
+//        sextoBug();
     }
 
     private static double registrarItem(String item, int quantidade) {

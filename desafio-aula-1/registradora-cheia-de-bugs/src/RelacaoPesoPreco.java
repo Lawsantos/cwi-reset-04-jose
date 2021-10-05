@@ -8,7 +8,7 @@ public class RelacaoPesoPreco {
         }
 
         if (Constantes.TORTA.equals(item)) {
-            precoTotal = 96.00 * (qtd / 16);
+            precoTotal = 96.00 * qtd / 16;
         }
 
         if (Constantes.LEITE.equals(item)) {
