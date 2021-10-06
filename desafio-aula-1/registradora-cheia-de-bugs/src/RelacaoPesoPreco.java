@@ -4,7 +4,7 @@ public class RelacaoPesoPreco {
         double precoTotal = 0;
 
         if (Constantes.PAO.equals(item)) {
-            precoTotal = 12.75 * (qtd * 60 / 1000);
+            precoTotal = 12.75 * qtd * 60 / 1000;
             ItensPorQuantidade.pao = ItensPorQuantidade.pao - (qtd * 60);
         }
 
