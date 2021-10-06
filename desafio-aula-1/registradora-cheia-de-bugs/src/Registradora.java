@@ -10,9 +10,9 @@ public class Registradora {
 
 //        quartoBug();
 
-        quintoBug();
+//        quintoBug();
 
-//        sextoBug();
+        sextoBug();
     }
 
     private static double registrarItem(String item, int quantidade) {
@@ -23,9 +23,13 @@ public class Registradora {
 
         boolean itemDependeDeCozinha = Constantes.PAO.equals(item) || Constantes.SANDUICHE_PRONTO.equals(item) || Constantes.TORTA.equals(item);
         boolean cozinhaFechada = !DataProjeto.cozinhaEmFuncionamento();
+        boolean estoqueInsuficiente = ItensPorQuantidade.estoqueInsuficiente(item, quantidade);
 
-        if (itemDependeDeCozinha && cozinhaFechada) {
+        if (itemDependeDeCozinha && cozinhaFechada && estoqueInsuficiente) {
             System.out.println("Cozinha fechada!");
+            String mensagemFormatada = String.format("Reposição indisponível de %s, quantidade restante em estoque é de %d.", item, ItensPorQuantidade.pegarEstoqueItem(item));
+            System.out.println(mensagemFormatada);
+            throw new RuntimeException("Somente para encerrar a execução do programa!");
         } else {
             //Reposição padrão por falta de estoque para a venda
             while (ItensPorQuantidade.estoqueInsuficiente(item, quantidade)) {

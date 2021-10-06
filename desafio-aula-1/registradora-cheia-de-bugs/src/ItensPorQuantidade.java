@@ -30,4 +30,28 @@ public class ItensPorQuantidade {
 
         return false;
     }
+
+    public static int pegarEstoqueItem(String item) {
+        if (Constantes.CAFE.equals(item)) {
+            return ItensPorQuantidade.cafe;
+        }
+
+        if (Constantes.LEITE.equals(item)) {
+            return ItensPorQuantidade.leite;
+        }
+
+        if (Constantes.TORTA.equals(item)) {
+            return ItensPorQuantidade.torta;
+        }
+
+        if (Constantes.SANDUICHE_PRONTO.equals(item)) {
+            return ItensPorQuantidade.sanduiche;
+        }
+
+        if (Constantes.PAO.equals(item)) {
+            return ItensPorQuantidade.pao;
+        }
+
+        throw new RuntimeException("Este caso não deveria existir!");
+    }
 }
