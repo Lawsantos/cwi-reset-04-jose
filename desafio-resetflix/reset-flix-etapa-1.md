@@ -187,3 +187,90 @@ Para iniciarmos o projeto vamos seguir a seguinte estrutura:
     - Mensagem de erro: "Campo obrigatório não informado. Favor informar o campo {campo}."
   - Deve retornar o diretor filtrado pelo id
   - Caso não encontrado o diretor, deve retornar a mensagem: "Nenhum diretor encontrado com o parâmetro id={}, favor verifique os parâmetros informados."
+
+## Observações complementares
+
+Para executarmos este exercício, teremos uma base de dados falsa com dados em memória na execução do nosso programa, para isto, basta copiar a classe que temos abaixo para o seu projeto.
+
+**IMPORTANTE**: Esta classe depende de outras classes que devem ser importadas para correto funcionamento.
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class FakeDatabase {
+
+    private List<Ator> atores = new ArrayList<>();
+    private List<Diretor> diretores = new ArrayList<>();
+
+    public void persisteAtor(Ator ator) {
+        atores.add(ator);
+    }
+
+    public List<Ator> recuperaAtores() {
+        return atores;
+    }
+
+    public void persisteDiretor(Diretor diretor) {
+        diretores.add(diretor);
+    }
+
+    public List<Diretor> recuperaDiretores() {
+        return diretores;
+    }
+}
+
+```
+
+------------------------------------
+
+Nos arquivos `AtorService` e `DiretorService` deve ser incluído uma propriedade que se refere a classe `FakeDatabase`, e a mesma deve ser recebida pelo construtor, segue um exemplo de como deve ficar a classe `AtorService`.
+
+**IMPORTANTE**: Esta classe depende de outras classes que devem ser importadas para correto funcionamento.
+
+```java
+public class AtorService {
+
+    private FakeDatabase fakeDatabase;
+
+    public AtorService(FakeDatabase fakeDatabase) {
+        this.fakeDatabase = fakeDatabase;
+    }
+
+    // Demais métodos da classe
+}
+```
+
+------------------------------------
+
+Para execução do projeto, deve ser criado a classe `Aplicacao` contendo o método `main` que será utilizado para chamar os métodos criados e testar os cenários, segue um exemplo abaixo de como ficaria a classe para validar que um ator foi criado com sucesso.
+
+**IMPORTANTE**: Esta classe depende de outras classes que devem ser importadas para correto funcionamento.
+
+```java
+public class Aplicacao {
+
+    public static void main(String[] args) {
+        FakeDatabase fakeDatabase = new FakeDatabase();
+
+        AtorService atorService = new AtorService(fakeDatabase);
+
+        String nome = "Will Smith";
+        LocalDate dataNascimento = LocalDate.of(1968, Month.SEPTEMBER, 25);
+        StatusCarreira statusCarreira = StatusCarreira.EM_ATIVIDADE;
+        Integer anoInicioAtividade = 1686;
+        AtorRequest atorRequest = new AtorRequest(nome, dataNascimento, statusCarreira, anoInicioAtividade);
+
+        atorService.criarAtor(atorRequest);
+
+        List<Ator> atores = fakeDatabase.recuperaAtores();
+
+        System.out.println("Deve conter 1 ator, quantidade encontrada: " + atores.size());
+        System.out.println("Primeiro ator deve ser 'Will Smith', valor encontrado: " + atores.get(0).getNome());
+    }
+}
+```
+
+------------------------------------
+
+**Os contratos especificados no exercício devem ser respeitados, caso alguma nomenclatura especificada seja alterada, os instrutores e monitores podem solicitar o ajuste. Caso o ajuste não seja realizado, não será garantido uma avaliação do exercício proposto.**
