@@ -6,8 +6,8 @@ import br.com.cwi.reset.josealencar.model.Ator;
 import br.com.cwi.reset.josealencar.model.StatusCarreira;
 import br.com.cwi.reset.josealencar.request.AtorRequest;
 import br.com.cwi.reset.josealencar.response.AtorEmAtividade;
+import br.com.cwi.reset.josealencar.validator.BasicInfoRequiredValidator;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,39 +21,17 @@ public class AtorService {
     }
 
     public void criarAtor(AtorRequest atorRequest) throws Exception {
-        if (atorRequest.getNome() == null) {
-            throw new NomeNaoInformadoException();
-        }
-
-        if (atorRequest.getDataNascimento() == null) {
-            throw new DataNascimentoNaoInformadoException();
-        }
+        new BasicInfoRequiredValidator().accept(atorRequest.getNome(), atorRequest.getDataNascimento(), atorRequest.getAnoInicioAtividade(), TipoDominioException.ATOR);
 
         if (atorRequest.getStatusCarreira() == null) {
             throw new StatusCarreiraNaoInformadoException();
-        }
-
-        if (atorRequest.getAnoInicioAtividade() == null) {
-            throw new AnoInicioAtividadeNaoInformadoException();
-        }
-
-        if (atorRequest.getNome().split(" ").length < 2) {
-            throw new NomeSobrenomeObrigatorioException("ator");
-        }
-
-        if (LocalDate.now().isBefore(atorRequest.getDataNascimento())) {
-            throw new NascidosNoFuturoException("atores");
-        }
-
-        if (atorRequest.getAnoInicioAtividade() <= atorRequest.getDataNascimento().getYear()) {
-            throw new AnoInicioAtividadeInvalidoException("ator");
         }
 
         final List<Ator> atoresCadastrados = fakeDatabase.recuperaAtores();
 
         for (Ator atorCadastrado : atoresCadastrados) {
             if (atorCadastrado.getNome().equalsIgnoreCase(atorRequest.getNome())) {
-                throw new CadastroDuplicadoException("ator", atorRequest.getNome());
+                throw new CadastroDuplicadoException(TipoDominioException.ATOR.getSingular(), atorRequest.getNome());
             }
         }
 
@@ -68,7 +46,7 @@ public class AtorService {
         final List<Ator> atoresCadastrados = fakeDatabase.recuperaAtores();
 
         if (atoresCadastrados.isEmpty()) {
-            throw new ListaVaziaException("ator", "atores");
+            throw new ListaVaziaException(TipoDominioException.ATOR.getSingular(), TipoDominioException.ATOR.getPlural());
         }
 
         final List<AtorEmAtividade> retorno = new ArrayList<>();
@@ -110,14 +88,14 @@ public class AtorService {
             }
         }
 
-        throw new ConsultaIdInvalidoException("ator", id);
+        throw new ConsultaIdInvalidoException(TipoDominioException.ATOR.getSingular(), id);
     }
 
     public List<Ator> consultarAtores() throws Exception {
         final List<Ator> atores = fakeDatabase.recuperaAtores();
 
         if (atores.isEmpty()) {
-            throw new ListaVaziaException("ator", "atores");
+            throw new ListaVaziaException(TipoDominioException.ATOR.getSingular(), TipoDominioException.ATOR.getPlural());
         }
 
         return atores;
