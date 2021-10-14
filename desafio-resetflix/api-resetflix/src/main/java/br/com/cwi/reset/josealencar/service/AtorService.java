@@ -38,22 +38,22 @@ public class AtorService {
         }
 
         if (atorRequest.getNome().split(" ").length < 2) {
-            throw new NomeSobrenomeAtorObrigatorioException();
+            throw new NomeSobrenomeObrigatorioException("ator");
         }
 
         if (LocalDate.now().isBefore(atorRequest.getDataNascimento())) {
-            throw new Exception("Não é possível cadastrar atores não nascidos.");
+            throw new NascidosNoFuturoException("atores");
         }
 
         if (atorRequest.getAnoInicioAtividade() <= atorRequest.getDataNascimento().getYear()) {
-            throw new Exception("Ano de início de atividade inválido para o ator cadastrado.");
+            throw new AnoInicioAtividadeInvalidoException("ator");
         }
 
         final List<Ator> atoresCadastrados = fakeDatabase.recuperaAtores();
 
         for (Ator atorCadastrado : atoresCadastrados) {
             if (atorCadastrado.getNome().equalsIgnoreCase(atorRequest.getNome())) {
-                throw new Exception(String.format("Já existe um ator cadastrado para o nome %s.", atorRequest.getNome()));
+                throw new CadastroDuplicadoException("ator", atorRequest.getNome());
             }
         }
 
@@ -68,7 +68,7 @@ public class AtorService {
         final List<Ator> atoresCadastrados = fakeDatabase.recuperaAtores();
 
         if (atoresCadastrados.isEmpty()) {
-            throw new Exception("Nenhum ator cadastrado, favor cadastar atores.");
+            throw new ListaVaziaException("ator", "atores");
         }
 
         final List<AtorEmAtividade> retorno = new ArrayList<>();
@@ -91,7 +91,7 @@ public class AtorService {
         }
 
         if (retorno.isEmpty()) {
-            throw new Exception(String.format("Ator não encontrato com o filtro %s, favor informar outro filtro.", filtroNome));
+            throw new FiltroNomeNaoEncontrado("Ator", filtroNome);
         }
 
         return retorno;
@@ -99,7 +99,7 @@ public class AtorService {
 
     public Ator consultarAtor(Integer id) throws Exception {
         if (id == null) {
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo id.");
+            throw new IdNaoInformado();
         }
 
         final List<Ator> atores = fakeDatabase.recuperaAtores();
@@ -110,14 +110,14 @@ public class AtorService {
             }
         }
 
-        throw new Exception(String.format("Nenhum ator encontrado com o parâmetro id=%d, favor verifique os parâmetros informados.", id));
+        throw new ConsultaIdInvalidoException("ator", id);
     }
 
     public List<Ator> consultarAtores() throws Exception {
         final List<Ator> atores = fakeDatabase.recuperaAtores();
 
         if (atores.isEmpty()) {
-            throw new Exception("Nenhum ator cadastrado, favor cadastar atores.");
+            throw new ListaVaziaException("ator", "atores");
         }
 
         return atores;

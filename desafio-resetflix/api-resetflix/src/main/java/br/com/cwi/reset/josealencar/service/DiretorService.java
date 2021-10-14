@@ -1,5 +1,6 @@
 package br.com.cwi.reset.josealencar.service;
 
+import br.com.cwi.reset.josealencar.exception.*;
 import br.com.cwi.reset.josealencar.model.Diretor;
 import br.com.cwi.reset.josealencar.request.DiretorRequest;
 import br.com.cwi.reset.josealencar.FakeDatabase;
@@ -19,34 +20,34 @@ public class DiretorService {
 
     public void cadastrarDiretor(final DiretorRequest diretorRequest) throws Exception {
         if (diretorRequest.getNome() == null) {
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo nome.");
+            throw new NomeNaoInformadoException();
         }
 
         if (diretorRequest.getDataNascimento() == null) {
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo dataNascimento.");
+            throw new DataNascimentoNaoInformadoException();
         }
 
         if (diretorRequest.getAnoInicioAtividade() == null) {
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo anoInicioAtividade.");
+            throw new AnoInicioAtividadeNaoInformadoException();
         }
 
         if (diretorRequest.getNome().split(" ").length < 2) {
-            throw new Exception("Deve ser informado no mínimo nome e sobrenome para o diretor.");
+            throw new NomeSobrenomeObrigatorioException("diretor");
         }
 
         if (LocalDate.now().isBefore(diretorRequest.getDataNascimento())) {
-            throw new Exception("Não é possível cadastrar diretores não nascidos.");
+            throw new NascidosNoFuturoException("diretores");
         }
 
         if (diretorRequest.getAnoInicioAtividade() <= diretorRequest.getDataNascimento().getYear()) {
-            throw new Exception("Ano de início de atividade inválido para o diretor cadastrado.");
+            throw new AnoInicioAtividadeInvalidoException("diretor");
         }
 
         final List<Diretor> diretoresCadastrados = fakeDatabase.recuperaDiretores();
 
         for (Diretor diretorCadastrado : diretoresCadastrados) {
             if (diretorCadastrado.getNome().equalsIgnoreCase(diretorRequest.getNome())) {
-                throw new Exception(String.format("Já existe um diretor cadastrado para o nome %s.", diretorRequest.getNome()));
+                throw new CadastroDuplicadoException("diretor", diretorRequest.getNome());
             }
         }
 
@@ -61,7 +62,7 @@ public class DiretorService {
         final List<Diretor> diretoresCadastrados = fakeDatabase.recuperaDiretores();
 
         if (diretoresCadastrados.isEmpty()) {
-            throw new Exception("Nenhum diretor cadastrado, favor cadastar diretores.");
+            throw new ListaVaziaException("diretor", "diretores");
         }
 
         final List<Diretor> retorno = new ArrayList<>();
@@ -78,7 +79,7 @@ public class DiretorService {
         }
 
         if (retorno.isEmpty()) {
-            throw new Exception(String.format("Diretor não encontrato com o filtro %s, favor informar outro filtro.", filtroNome));
+            throw new FiltroNomeNaoEncontrado("Diretor", filtroNome);
         }
 
         return retorno;
@@ -86,7 +87,7 @@ public class DiretorService {
 
     public Diretor consultarDiretor(final Integer id) throws Exception {
         if (id == null) {
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo id.");
+            throw new IdNaoInformado();
         }
 
         final List<Diretor> diretores = fakeDatabase.recuperaDiretores();
@@ -97,6 +98,6 @@ public class DiretorService {
             }
         }
 
-        throw new Exception(String.format("Nenhum diretor encontrado com o parâmetro id=%d, favor verifique os parâmetros informados.", id));
+        throw new ConsultaIdInvalidoException("diretor", id);
     }
 }
